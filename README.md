@@ -1,86 +1,87 @@
-# Demo Agentspace: Analisis Tren Media Sosial dengan Google Cloud Platform
+# Agentspace Demo: Social Media Trend Analysis with Google Cloud Platform
 
-Proyek ini mendemonstrasikan pembangunan sebuah "Agentspace" — antarmuka AI percakapan cerdas — yang dirancang untuk menganalisis dan menjawab pertanyaan tentang tren di berbagai platform media sosial. Data tren secara otomatis dikumpulkan dan disimpan di Google BigQuery. Tujuan utamanya adalah untuk menunjukkan bagaimana Google Cloud Platform (GCP) dapat mengintegrasikan pipeline data otomatis dengan kemampuan AI generatif untuk memberikan wawasan bisnis yang real-time dan interaktif.
+[cite_start]This project demonstrates the construction of an "Agentspace" — an intelligent conversational AI interface — designed to analyze and answer questions about trends across various social media platforms[cite: 4, 5]. [cite_start]The trend data is automatically collected and stored in Google BigQuery[cite: 5]. [cite_start]The primary goal is to showcase how Google Cloud Platform (GCP) can integrate automated data pipelines with generative AI capabilities to provide real-time and interactive business insights[cite: 6].
 
-## 🚀 Arsitektur
+## 🚀 Architecture
 
-### Diagram Alur Layanan GCP
+### GCP Service Architecture
 
-Arsitektur ini melibatkan beberapa layanan GCP yang bekerja bersama:
+This architecture involves several GCP services working together:
 
-1.  **Cloud Scheduler**: Memicu layanan `trend-generator` (Cloud Run) secara otomatis setiap 2 menit.
-2.  **Cloud Run (trend-generator)**: Menghasilkan data tren dummy dari platform seperti Facebook, TikTok, Twitter, dan Instagram, lalu memasukkan data ini ke tabel `daily_trends` dan `social_media_posts` di BigQuery.
-3.  **BigQuery**: Berfungsi sebagai repositori data terpusat dan terstruktur untuk semua data tren yang di-ingest.
-4.  **Vertex AI Search (Data Store)**: Data dari BigQuery disinkronkan ke Data Store di Vertex AI Search. Ini memungkinkan agen AI untuk melakukan *Retrieval Augmented Generation* (RAG) dari data terstruktur.
-5.  **Vertex AI Agent Builder**: Agen AI (`SocialMediaTrendAnalyzer`) yang dibangun di platform ini akan berinteraksi langsung dengan pengguna. Agen ini memanfaatkan Data Store Vertex AI Search untuk menemukan dan mengambil informasi relevan dari BigQuery, lalu menggunakan Model Bahasa Besar (LLM) untuk menyusun jawaban yang informatif.
+1.  [cite_start]**Cloud Scheduler**: Automatically triggers the `trend-generator` (Cloud Run service) every 2 minutes[cite: 10].
+2.  [cite_start]**Cloud Run (trend-generator)**: Generates rich dummy trend data (from platforms like Facebook, TikTok, Twitter, Instagram) and ingests this data into the `daily_trends` and `social_media_posts` tables in BigQuery[cite: 11].
+3.  [cite_start]**BigQuery**: Serves as a centralized, structured data repository for all ingested trend data[cite: 12].
+4.  [cite_start]**Vertex AI Search (Data Store)**: Data from BigQuery is synchronized to a Data Store in Vertex AI Search[cite: 13]. [cite_start]This enables the AI agent to perform *Retrieval Augmented Generation* (RAG) from your structured data[cite: 14].
+5.  [cite_start]**Vertex AI Agent Builder**: The AI agent (`SocialMediaTrendAnalyzer`) built on this platform directly interacts with users[cite: 15]. [cite_start]When users ask trend-related questions, this agent leverages the Vertex AI Search Data Store to find and retrieve relevant information from BigQuery, then uses a Large Language Model (LLM) to compose informative answers[cite: 16].
 
 ### Data Flow Diagram
 
-Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan agen AI percakapan. Setiap dua menit, Cloud Scheduler memicu Cloud Run untuk menghasilkan dan menyimpan data dummy ke BigQuery. Data ini kemudian disinkronkan ke Vertex AI Search (Data Store). Agen AI `SocialMediaTrendAnalyzer` di Vertex AI Agent Builder menggunakan data ini untuk menjawab pertanyaan pengguna secara cerdas dan real-time melalui Agentspace, menyediakan pengalaman analitik yang interaktif dan responsif.
+[cite_start]This diagram illustrates how Google Cloud Platform can automate social media trend analysis using a conversational AI agent[cite: 18]. [cite_start]Every two minutes, Cloud Scheduler triggers Cloud Function to fetch the latest data from various social media APIs like Facebook, Instagram, TikTok, and Twitter[cite: 19]. [cite_start]The collected data is stored in BigQuery as a central repository, then synchronized to Vertex AI Search (Data Store)[cite: 20]. [cite_start]The AI agent named `SocialMediaTrendAnalyzer`, built in Vertex AI Agent Builder, then uses this data to answer user questions intelligently and in real-time via Agentspace, creating an interactive and responsive analytical experience[cite: 21].
 
-## 🛠️ Layanan GCP yang Digunakan
+## 🛠️ GCP Services Used
 
-* **BigQuery**
-    * **Peran**: Data Warehouse terkelola sepenuhnya untuk penyimpanan data tren media sosial yang scalable dan hemat biaya. Bertindak sebagai "single source of truth".
-    * **Detail**: Dataset `social_media_trends` dengan tabel `daily_trends` (ringkasan tren) dan `social_media_posts` (detail postingan individu).
+* [cite_start]**BigQuery** [cite: 23]
+    * **Role**: A fully managed data warehouse for scalable and cost-effective storage of social media trend data. [cite_start]It acts as the "single source of truth" for data analyzed by the agent[cite: 24, 25].
+    * [cite_start]**Details**: `social_media_trends` dataset, with `daily_trends` (trend summaries) and `social_media_posts` (individual post details) tables[cite: 26].
 
-* **Cloud Run**
-    * **Peran**: Layanan komputasi tanpa server yang event-driven, digunakan sebagai generator data tren. Menskalakan dari nol hingga memenuhi permintaan.
-    * **Nama Layanan**: `trend-generator`
-    * **Bahasa**: Python 3.11
-    * **Base Image**: `python:3.11-slim-buster`
+* [cite_start]**Cloud Run** [cite: 27]
+    * **Role**: An event-driven, serverless compute service used as the trend data generator. [cite_start]It scales from zero (no cost when idle) to meet demand[cite: 28, 29].
+    * [cite_start]**Service Name**: `trend-generator` [cite: 30]
+    * [cite_start]**Language**: Python 3.11 [cite: 31]
+    * [cite_start]**Base Image**: `python:3.11-slim-buster` [cite: 32]
 
-* **Cloud Scheduler**
-    * **Peran**: Penjadwal cron terkelola yang memicu layanan Cloud Run secara berkala (setiap 2 menit).
-    * **Nama Job**: `trigger-trend-generator`
+* [cite_start]**Cloud Scheduler** [cite: 33]
+    * [cite_start]**Role**: A managed cron job scheduler that periodically triggers the Cloud Run service (every 2 minutes)[cite: 34].
+    * [cite_start]**Job Name**: `trigger-trend-generator` [cite: 35]
 
-* **Vertex AI Search (Discovery Engine - Data Store)**
-    * **Peran**: Memungkinkan pembuatan mesin pencari yang kuat dari data Anda. Mengindeks data BigQuery dan membuatnya tersedia untuk pengambilan informasi oleh agen AI.
-    * **Jenis**: Data Store Structured yang terhubung langsung ke tabel BigQuery.
+* [cite_start]**Vertex AI Search (Discovery Engine - Data Store)** [cite: 36]
+    * **Role**: Allows you to create a powerful search engine from your data. [cite_start]It's used to index BigQuery data and make it available for information retrieval by the AI agent[cite: 37, 38].
+    * [cite_start]**Type**: Structured Data Store directly connected to BigQuery tables[cite: 39].
 
-* **Vertex AI Agent Builder**
-    * **Peran**: Platform pengembangan untuk membangun agen AI percakapan yang didukung oleh LLM. Mengorkestrasi interaksi pengguna, pemanggilan tool, dan respons LLM.
-    * **Nama Agen**: `SocialMediaTrendAnalyzer`
-    * **Region**: `us-central1` (Region utama untuk layanan Generative AI).
-    * **Model**: Gemini (atau Gemini Pro).
+* [cite_start]**Vertex AI Agent Builder** [cite: 40]
+    * **Role**: A development platform for building AI conversational agents powered by Large Language Models (LLM). [cite_start]It orchestrates user interactions, tool calls, and LLM responses[cite: 41, 42].
+    * [cite_start]**Agent Name**: `SocialMediaTrendAnalyzer` [cite: 43]
+    * [cite_start]**Region**: `us-central1` (Primary region for GenAI services) [cite: 44]
+    * [cite_start]**Model**: Gemini (or Gemini Pro) [cite: 45]
 
-* **(Opsional/Alternatif) Cloud Function (`query-bigquery-trends`)**
-    * **Peran**: Fungsi tanpa server yang dapat berfungsi sebagai API gateway untuk mengkueri BigQuery jika pendekatan "Custom Tool" dipilih di Agent Builder.
-    * **Nama Fungsi**: `query-bigquery-trends`
-    * **URL (contoh)**: `https://asia-southeast2-YOUR_GCP_PROJECT_ID.cloudfunctions.net/query-bigquery-trends`
+* [cite_start]**(Optional/Alternative) Cloud Function (`query-bigquery-trends`)** [cite: 46]
+    * [cite_start]**Role**: A serverless function that can act as an API gateway for querying BigQuery if you choose a "Custom Tool" approach in Agent Builder instead of Data Store[cite: 47]. [cite_start]This function is deployed as a private function requiring OIDC authentication[cite: 48].
+    * [cite_start]**Function Name**: `query-bigquery-trends` [cite: 49]
+    * [cite_start]**URL (example)**: `https://asia-southeast2-YOUR_GCP_PROJECT_ID.cloudfunctions.net/query-bigquery-trends` (This URL is needed if you choose to use Cloud Function as a Custom Tool)[cite: 50].
 
-## 🚀 Langkah-langkah Deployment
+## 🚀 Deployment Steps
 
-### A. Persiapan Lingkungan & API Media Sosial (Konseptual)
-*(Catatan: Dalam demo ini, kita menggunakan data dummy yang dihasilkan oleh Cloud Run, sehingga Anda tidak perlu melalui proses persiapan API yang sebenarnya ini. Bagian ini bersifat konseptual untuk menunjukkan apa yang akan diperlukan dalam skenario dunia nyata.)*
+### A. Social Media API & Environment Preparation (Conceptual)
 
-* **Pahami Kebijakan Platform**: Setiap platform (Meta/Facebook/Instagram, TikTok, X/Twitter) memiliki kebijakan API, ketentuan layanan, dan batasan penggunaan data yang berbeda.
-* **Daftar sebagai Developer & Buat Aplikasi**: Kunjungi portal developer masing-masing platform.
-* **Ajukan Akses API & Lewati Proses Review**: Banyak API sosial media memerlukan persetujuan dan proses review yang ketat.
-* **Pahami Autentikasi & Token**: Pelajari mekanisme autentikasi setiap API (umumnya OAuth 2.0).
-* **Perhatikan Batasan Rate Limit**: Rancang pipeline data Anda agar sesuai dengan batasan ini.
-* **Gunakan SDK/Library Resmi**: Manfaatkan SDK atau library resmi untuk memudahkan interaksi API.
+*(Note: This demo uses dummy data generated by Cloud Run, so actual API preparation is not required. This section is conceptual to illustrate what would be needed in a real-world scenario.)*
 
-### B. Persiapan Lingkungan GCP
+* **Understand Platform Policies**: Each platform (Meta/Facebook/Instagram, TikTok, X/Twitter) has distinct API policies, terms of service, and data usage limitations.
+* **Register as a Developer & Create an App**: Visit the developer portal for each platform (e.g., Meta for Developers, TikTok for Developers, X Developer Platform).
+* **Request API Access & Undergo Review**: Many social media APIs require strict approval and review processes.
+* **Understand Authentication & Tokens**: Learn each API's authentication mechanism (commonly OAuth 2.0).
+* **Observe Rate Limits**: Design your data ingestion pipeline to adhere to API rate limits.
+* **Use Official SDK/Library**: Utilize official SDKs or libraries provided by the platforms.
 
-1.  **Pilih Project GCP Anda**: Ganti `YOUR_GCP_PROJECT_ID` dengan ID proyek Anda. Pastikan billing diaktifkan.
-2.  **Buka Cloud Shell**.
-3.  **Konfigurasi `gcloud` CLI**:
+### B. GCP Environment Preparation
+
+1.  **Choose Your GCP Project**: Replace `YOUR_GCP_PROJECT_ID` with your actual project ID. Ensure billing is activated.
+2.  **Open Cloud Shell**.
+3.  **Configure `gcloud` CLI**:
     ```bash
     gcloud config set project YOUR_GCP_PROJECT_ID
-    gcloud components install alpha # Untuk perintah tertentu
+    gcloud components install alpha # For specific commands
     gcloud auth application-default login
     ```
 
-### C. BigQuery Setup (Pusat Data Tren)
+### C. BigQuery Setup (Trend Data Hub)
 
-1.  **Aktifkan BigQuery API**.
-2.  **Buat BigQuery Dataset**:
-    * Di konsol BigQuery, buat dataset dengan ID: `social_media_trends`.
-    * Lokasi data: `asia-southeast2` (Jakarta).
-3.  **Buat Tabel BigQuery `daily_trends`**:
-    * Nama tabel: `daily_trends`.
-    * Skema (mode teks):
+1.  **Enable BigQuery API**: Navigate to APIs & Services > Enabled APIs & Services.
+2.  **Create BigQuery Dataset**:
+    * In the BigQuery Console, create a dataset with ID: `social_media_trends`.
+    * Data location: `asia-southeast2` (Jakarta).
+3.  **Create BigQuery Table `daily_trends`**:
+    * Table name: `daily_trends`.
+    * Schema (text mode):
         ```json
         [
             {"name": "keyword", "type": "STRING", "mode": "NULLABLE"},
@@ -102,10 +103,10 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
             {"name": "total_posts_count", "type": "INTEGER", "mode": "NULLABLE"}
         ]
         ```
-    * Klik "CREATE TABLE".
-4.  **Buat Tabel BigQuery `social_media_posts`**:
-    * Nama tabel: `social_media_posts`.
-    * Skema (mode teks):
+    * Click "CREATE TABLE".
+4.  **Create BigQuery Table `social_media_posts`**:
+    * Table name: `social_media_posts`.
+    * Schema (text mode):
         ```json
         [
             {"name": "post_id", "type": "STRING", "mode": "REQUIRED"},
@@ -123,17 +124,17 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
             {"name": "user_id", "type": "STRING", "mode": "NULLABLE"}
         ]
         ```
-    * Klik "CREATE TABLE".
+    * Click "CREATE TABLE".
 
 ### D. Cloud Run (Data Generator: `trend-generator`)
 
-1.  **Aktifkan Cloud Run & Artifact Registry APIs**.
-2.  **Buat Direktori Kerja & File**:
+1.  **Enable Cloud Run & Artifact Registry APIs**.
+2.  **Create Working Directory & Files**:
     ```bash
     mkdir ~/trend_generator
     cd ~/trend_generator
     ```
-3.  **Buat `Dockerfile`**:
+3.  **Create `Dockerfile`**:
     ```dockerfile
     FROM python:3.11-slim-buster
 
@@ -147,12 +148,12 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
 
     CMD ["functions-framework", "--target", "generate_and_store_trends", "--port", "8080"]
     ```
-4.  **Buat `requirements.txt`**:
+4.  **Create `requirements.txt`**:
     ```
     google-cloud-bigquery
     functions-framework
     ```
-5.  **Buat `main.py`**:
+5.  **Create `main.py`**:
     ```python
     import os
     import datetime
@@ -161,21 +162,19 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
     import functions_framework
     import json
 
-    # Print debug statements to trace execution flow
     print("DEBUG: Script started. (Global scope - trend_generator)")
 
-    # Environment variables or default values
     PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "YOUR_GCP_PROJECT_ID")
     DATASET_ID = "social_media_trends"
     DAILY_TRENDS_TABLE = "daily_trends"
     POSTS_TABLE = "social_media_posts"
     print(f"DEBUG: Project/Dataset/Table IDs set. (Global scope - trend_generator)")
 
+
     @functions_framework.http
     def generate_and_store_trends(request):
         print("DEBUG: generate_and_store_trends function called.")
         try:
-            # Initialize BigQuery client inside the function to ensure fresh connection per invocation
             client = bigquery.Client()
             print("DEBUG: BigQuery client initialized inside function.")
 
@@ -185,7 +184,6 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
             current_timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
             today = datetime.date.today()
 
-            # Define platforms and their associated data for dummy generation
             platforms_data = {
                 'Facebook': {'source': 'Meta Graph API (Ads Archive)', 'topics': ['Promo Gadget', 'Fashion Sale', 'Local Events', 'Health Tips'], 'id_prefix': 'FB_AD_', 'url_base': '[https://facebook.com/ads/](https://facebook.com/ads/)', 'post_types': ['Image', 'Video']},
                 'TikTok': {'source': 'TikTok Search API', 'topics': ['Dance Challenge', 'Cooking Hacks', 'Travel Vlog', 'DIY Crafts'], 'id_prefix': 'TIK_VIDEO_', 'url_base': '[https://tiktok.com/@user/video/](https://tiktok.com/@user/video/)', 'post_types': ['Video']},
@@ -193,16 +191,13 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                 'Instagram': {'source': 'Instagram Media API', 'topics': ['Photography Tips', 'Fitness Journey', 'Art Showcase', 'Food Photography'], 'id_prefix': 'IG_POST_', 'url_base': '[https://instagram.com/p/](https://instagram.com/p/)', 'post_types': ['Image', 'Video']}
             }
 
-            # Loop through platforms and topics to generate data
             for platform, p_data in platforms_data.items():
                 for topic in p_data['topics']:
-                    # Generate realistic-ish dummy metrics for daily trends
                     total_views_impressions_plays = random.randint(5_000_000, 20_000_000)
                     total_likes_count = total_views_impressions_plays // random.randint(10, 20)
                     total_comments_count = total_likes_count // random.randint(20, 50)
                     total_shares_count = total_likes_count // random.randint(10, 30)
 
-                    # Generate keyword and content summary
                     keyword = f"{topic} trends on {platform}"
                     content_text_summary = f"Overall trends for {topic.lower()} on {platform} today."
                     if platform == 'Twitter':
@@ -214,7 +209,7 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                     else: # Facebook
                         keyword = f"{topic} Discussion on Facebook"
 
-                    # Dummy demographic and region summaries (as JSON strings)
+
                     demog_data = [
                         {"age": "18-24", "gender": "male", "percentage": round(random.uniform(0.1, 0.4), 2)},
                         {"age": "25-34", "gender": "female", "percentage": round(random.uniform(0.1, 0.3), 2)},
@@ -229,23 +224,20 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                     ]
                     region_summary = json.dumps(region_data)
 
-                    # Generate hashtags
                     base_hashtags = [f"#{t.lower().replace(' ', '')}" for t in topic.split()]
                     platform_hashtags = [f"#{platform.lower()}trends", f"#{platform.lower()}{topic.replace(' ', '')}"]
                     all_hashtags = list(set(base_hashtags + platform_hashtags))
                     hashtags_list_str = " ".join(all_hashtags)
 
-                    # Generate unique IDs and URLs
                     trend_id = f"TREND_{platform}_{topic.replace(' ', '_')}_{today.strftime('%Y%m%d')}"
                     url_link_summary = f"[https://trendsummaries.com/](https://trendsummaries.com/){trend_id}"
 
-                    total_posts_for_trend = random.randint(50, 500) # Dummy count of posts contributing to the trend
+                    total_posts_for_trend = random.randint(50, 500)
 
-                    # Append data to daily_trends list
                     rows_for_daily_trends.append({
                         "keyword": keyword,
                         "date": today.isoformat(),
-                        "interest_score": total_likes_count + total_comments_count + total_shares_count, # Simple score
+                        "interest_score": total_likes_count + total_comments_count + total_shares_count,
                         "timestamp": current_timestamp,
                         "platform": platform,
                         "source_api": p_data['source'],
@@ -262,7 +254,6 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                         "total_posts_count": total_posts_for_trend
                     })
 
-                    # Generate a few dummy social media posts for each trend
                     num_posts_to_generate = random.randint(3, 8)
                     for i in range(num_posts_to_generate):
                         post_likes = random.randint(100, 5000)
@@ -276,7 +267,6 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                         post_url = f"{p_data['url_base']}{post_id}"
                         post_text = f"Amazing content on {topic.lower()}! #{topic.replace(' ', '')} #{platform} #{post_type.lower()}"
 
-                        # Append data to social_media_posts list
                         rows_for_posts.append({
                             "post_id": post_id,
                             "trend_keyword": keyword,
@@ -295,9 +285,7 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
 
             print(f"DEBUG: Generated total {len(rows_for_daily_trends)} trend summaries and {len(rows_for_posts)} individual posts.")
 
-            # Insert generated data into BigQuery tables
             try:
-                # Insert into daily_trends table
                 daily_trends_table_ref = client.dataset(DATASET_ID).table(DAILY_TRENDS_TABLE)
                 print(f"DEBUG: Inserting {len(rows_for_daily_trends)} rows to {DAILY_TRENDS_TABLE}")
                 errors_daily_trends = client.insert_rows_json(daily_trends_table_ref, rows_for_daily_trends)
@@ -306,7 +294,6 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                 else:
                     print(f"DEBUG ERROR: Errors inserting into {DAILY_TRENDS_TABLE}: {errors_daily_trends}")
 
-                # Insert into social_media_posts table
                 posts_table_ref = client.dataset(DATASET_ID).table(POSTS_TABLE)
                 print(f"DEBUG: Inserting {len(rows_for_posts)} rows to {POSTS_TABLE}")
                 errors_posts = client.insert_rows_json(posts_table_ref, rows_for_posts)
@@ -315,7 +302,6 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                 else:
                     print(f"DEBUG ERROR: Errors inserting into {POSTS_TABLE}: {errors_posts}")
 
-                # Return success or error message
                 if errors_daily_trends == [] and errors_posts == []:
                     return f"Successfully inserted {len(rows_for_daily_trends)} trends and {len(rows_for_posts)} posts.", 200
                 else:
@@ -329,8 +315,8 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
             print(f"DEBUG CRITICAL ERROR: An error occurred inside function: {e}")
             return f"An error occurred: {e}", 500
     ```
-6.  **Bangun & Deploy Layanan Cloud Run**:
-    Ganti `YOUR_GCP_PROJECT_ID` dengan ID proyek GCP Anda. URL Layanan Cloud Run akan terlihat di output. Catat URL tersebut.
+6.  **Build & Deploy Cloud Run Service**:
+    Replace `YOUR_GCP_PROJECT_ID` with your actual GCP project ID. Note the Cloud Run Service URL from the output of the `gcloud run deploy` command.
     ```bash
     docker build -t asia-southeast2-docker.pkg.dev/YOUR_GCP_PROJECT_ID/cloud-run-source-deploy/trend-generator:latest .
     docker push asia-southeast2-docker.pkg.dev/YOUR_GCP_PROJECT_ID/cloud-run-source-deploy/trend-generator:latest
@@ -347,12 +333,12 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
     --port 8080
     ```
 
-### E. Cloud Function (Endpoint Kueri BigQuery - Opsional)
+### E. Cloud Function (BigQuery Query Endpoint - Optional)
 
-*(Bagian ini hanya relevan jika Anda memilih menggunakan Cloud Function sebagai Custom Tool, bukan Data Store.)*
+*(This section is only relevant if you choose to use Cloud Function as a Custom Tool, not Data Store.)*
 
-1.  **Aktifkan Cloud Functions API**.
-2.  **Verifikasi Konten Direktori Fungsi (`~/bigquery_query_function/`)**:
+1.  **Enable Cloud Functions API**.
+2.  **Verify Content of Function Directory (`~/bigquery_query_function/`)**:
     * `requirements.txt`:
         ```
         google-cloud-bigquery
@@ -369,7 +355,7 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
         client = bigquery.Client()
         PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "YOUR_GCP_PROJECT_ID")
         DATASET_ID = "social_media_trends"
-        TABLE_ID = "daily_trends" # Fungsi ini hanya mengkueri daily_trends atau perlu disesuaikan untuk social_media_posts
+        TABLE_ID = "daily_trends" # This function currently only queries daily_trends or would need adjustment for social_media_posts
 
         @functions_framework.http
         def query_trends(request):
@@ -395,7 +381,7 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                 if not keyword:
                     return ("Missing 'keyword' in request body.", 400, headers)
 
-                # Query untuk daily_trends
+                # Query for daily_trends
                 select_columns_daily = """
                 keyword, date, interest_score, platform, source_api, item_id,
                 content_text, views_impressions_plays, likes_count, comments_count,
@@ -412,11 +398,11 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
                 LIMIT {limit}
                 """
 
-                # Query untuk social_media_posts (jika diperlukan)
-                # Anda bisa menambahkan logika untuk mengkueri tabel social_media_posts
-                # berdasarkan item_id dari daily_trends atau parameter lain
+                # Query for social_media_posts (if needed)
+                # You can add logic here to query the social_media_posts table
+                # based on item_id from daily_trends or other parameters
 
-                query_job = client.query(query_daily) # Menjalankan query ke daily_trends
+                query_job = client.query(query_daily) # Run query to daily_trends
                 results = [dict(row) for row in query_job.result()]
 
                 if not results:
@@ -441,13 +427,13 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
     --timeout 300s \
     --min-instances 1
     ```
-    Jika diminta "Allow unauthenticated invocations...?", jawab `N`. Catat URL Trigger Cloud Function.
+    If prompted "Allow unauthenticated invocations...?", answer `N`. Note the Cloud Function Trigger URL from the output.
 
-### F. Cloud Scheduler (Pemicu Data Generator: `trigger-trend-generator`)
+### F. Cloud Scheduler (Data Generator Trigger: `trigger-trend-generator`)
 
-1.  **Aktifkan Cloud Scheduler API**.
-2.  **Buat Cloud Scheduler Job**:
-    Ganti `YOUR_PROJECT_NUMBER` dengan Project Number GCP Anda (gunakan `gcloud projects describe YOUR_GCP_PROJECT_ID --format="value(projectNumber)"`). Ganti `YOUR_COMPUTE_SERVICE_ACCOUNT_EMAIL` dengan email Compute Engine Default Service Account Anda (misal: `[PROJECT_NUMBER]-compute@developer.gserviceaccount.com`). Ganti `YOUR_CLOUD_RUN_URL` dengan URL Layanan Cloud Run `trend-generator` Anda.
+1.  **Enable Cloud Scheduler API**.
+2.  **Create Cloud Scheduler Job**:
+    Replace `YOUR_PROJECT_NUMBER` with your GCP Project Number (use `gcloud projects describe YOUR_GCP_PROJECT_ID --format="value(projectNumber)"`). Replace `YOUR_COMPUTE_SERVICE_ACCOUNT_EMAIL` with your Compute Engine Default Service Account email (e.g., `[PROJECT_NUMBER]-compute@developer.gserviceaccount.com`). Replace `YOUR_CLOUD_RUN_URL` with the URL of your `trend-generator` Cloud Run Service.
     ```bash
     gcloud scheduler jobs create http trigger-trend-generator \
     --location=asia-southeast2 \
@@ -460,8 +446,8 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
     --headers="Content-Type=application/json" \
     --description="Trigger Cloud Run trend generator every 2 minutes"
     ```
-3.  **Verifikasi IAM untuk Cloud Scheduler**:
-    Pastikan Compute Engine Default Service Account (`YOUR_COMPUTE_SERVICE_ACCOUNT_EMAIL`) memiliki peran `roles/run.invoker` pada layanan Cloud Run `trend-generator`.
+3.  **Verify IAM for Cloud Scheduler**:
+    Ensure the Compute Engine Default Service Account (`YOUR_COMPUTE_SERVICE_ACCOUNT_EMAIL`) has the `roles/run.invoker` role on the `trend-generator` Cloud Run service.
     ```bash
     gcloud run services add-iam-policy-binding trend-generator \
     --member=serviceAccount:YOUR_COMPUTE_SERVICE_ACCOUNT_EMAIL \
@@ -469,48 +455,48 @@ Diagram ini mengilustrasikan otomatisasi analisis tren media sosial menggunakan 
     --region asia-southeast2
     ```
 
-### G. Verifikasi Aliran Data ke BigQuery
+### G. Verify Data Flow to BigQuery
 
-1.  **Paksa Eksekusi Cloud Scheduler**: Di konsol Cloud Scheduler, pilih job `trigger-trend-generator`, lalu klik "FORCE RUN". Verifikasi statusnya (harapannya SUCCESS atau 200 OK).
-2.  **Periksa Data di BigQuery (Kedua Tabel)**:
+1.  **Force Execute Cloud Scheduler**: In the Cloud Scheduler console, select the `trigger-trend-generator` job and click "FORCE RUN". Verify its status (expected: SUCCESS or 200 OK).
+2.  **Check Data in BigQuery (Both Tables)**:
     * `daily_trends`:
         ```sql
         SELECT * FROM `YOUR_GCP_PROJECT_ID.social_media_trends.daily_trends` ORDER BY timestamp DESC LIMIT 20
         ```
 
-### H. Vertex AI Search (Data Store - Koneksi Agentspace ke BigQuery)
+### H. Vertex AI Search (Data Store - Agentspace Connection to BigQuery)
 
-1.  **Aktifkan Vertex AI Search API (Discovery Engine)**.
-2.  **Buat Data Store**:
-    * Di konsol GCP, navigasikan ke **Vertex AI > Agent Builder > Discovery Engines > Data Stores**.
-    * Klik "CREATE NEW DATA STORE".
-    * Pilih tipe aplikasi: `Search for customer-facing applications`.
-    * Hubungkan sumber data: `Data in BigQuery`.
-    * Pilih dataset dan tabel BigQuery Anda: `social_media_trends.daily_trends`.
-    * Ikuti langkah-langkah untuk menamai Data Store Anda.
+1.  **Enable Vertex AI Search API (Discovery Engine)**.
+2.  **Create Data Store**:
+    * In the GCP console, navigate to **Vertex AI > Agent Builder > Discovery Engines > Data Stores**.
+    * Click "CREATE NEW DATA STORE".
+    * Choose application type: Select `Search for customer-facing applications`.
+    * Connect data source: Select `Data in BigQuery`.
+    * Select your BigQuery dataset and table: `social_media_trends.daily_trends`.
+    * Follow the steps to name your Data Store.
 
-### I. Vertex AI Agent Builder (Membangun & Menguji Agentspace)
+### I. Vertex AI Agent Builder (Building & Testing Agentspace)
 
-1.  **Aktifkan Agent Builder API**.
-2.  **Buat Agen "SocialMediaTrendAnalyzer"**:
-    * Di konsol GCP, navigasikan ke **Vertex AI > Generative AI > AI Application**.
-    * Klik "Create" (atau "CREATE NEW APPLICATION").
-    * Pilih tipe aplikasi: `Chat`.
-    * Nama aplikasi: `SocialMediaTrendAnalyzer`.
+1.  **Enable Agent Builder API**.
+2.  **Create "SocialMediaTrendAnalyzer" Agent**:
+    * In the GCP console, navigate to **Vertex AI > Generative AI > AI Application**.
+    * Click "Create" (or "CREATE NEW APPLICATION").
+    * Select application type: `Chat`.
+    * Application name: `SocialMediaTrendAnalyzer`.
     * Region: `us-central1`.
-    * Model: `Gemini` (atau `Gemini Pro`).
-    * Lanjutkan proses pembuatan agen.
-3.  **Hubungkan Data Store ke Agen**:
-    * Di halaman konfigurasi agen, temukan bagian "Data stores" atau "Search".
-    * Tambahkan Data Store yang baru Anda buat (dari `social_media_trends.daily_trends`).
-4.  **Verifikasi IAM untuk Interaksi Agen dengan Data Store**:
-    * Temukan Service Account Agent Assist Anda (misalnya `service-[PROJECT_NUMBER]@gcp-sa-dialogflow.iam.gserviceaccount.com`). Gunakan `gcloud projects describe YOUR_GCP_PROJECT_ID --format="value(projectNumber)"` untuk mendapatkan `[PROJECT_NUMBER]`.
-    * Berikan peran `roles/discoveryengine.user` kepada Service Account Agent Assist ini pada proyek Anda (`YOUR_GCP_PROJECT_ID`).
+    * Model: `Gemini` (or `Gemini Pro`).
+    * Continue the agent creation process.
+3.  **Connect Data Store to Agent**:
+    * Once the agent is created, on its configuration page, find the "Data stores" or "Search" section.
+    * Add the Data Store you just created (from `social_media_trends.daily_trends`).
+4.  **Verify IAM for Agent Interaction with Data Store**:
+    * Locate your Agent Assist Service Account (e.g., `service-[PROJECT_NUMBER]@gcp-sa-dialogflow.iam.gserviceaccount.com`). To get `[PROJECT_NUMBER]`, use `gcloud projects describe YOUR_GCP_PROJECT_ID --format="value(projectNumber)"`.
+    * Grant the `roles/discoveryengine.user` role to this Agent Assist Service Account on your project (`YOUR_GCP_PROJECT_ID`).
     ```bash
     gcloud projects add-iam-policy-binding YOUR_GCP_PROJECT_ID \
     --member=serviceAccount:[AGENT_SERVICE_ACCOUNT_EMAIL] \
     --role=roles/discoveryengine.user
     ```
-    Ganti `[AGENT_SERVICE_ACCOUNT_EMAIL]` dengan email Service Account Agent Assist Anda.
-5.  **Uji Agen AI Anda!**
-    Di panel "Test Agent" di sisi kanan konsol Agent Builder, ajukan pertanyaan-pertanyaan yang relevan dengan data Anda (contoh: "Tren AI di TikTok?", "Berapa views untuk Dance Challenge di Instagram?").
+    Replace `[AGENT_SERVICE_ACCOUNT_EMAIL]` with your Agent Assist Service Account email.
+5.  **Test Your AI Agent!**
+    In the "Test Agent" panel on the right side of the Agent Builder console, ask questions relevant to your data (e.g., "AI trends on TikTok?", "How many views for Dance Challenge on Instagram?").
