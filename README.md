@@ -8,6 +8,8 @@ Demo ini memperlihatkan pembangunan "Agentspace" atau antarmuka AI percakapan ya
 ## 2. Architecture
 
 ### 2.1. GCP Service Architecture
+![MNC Demo Agentspace (1)](https://github.com/user-attachments/assets/43015db6-4764-4259-85bc-b33ca6822fd7)
+
 Penjelasan Alur:
 * [cite_start]**Cloud Scheduler**: Memicu layanan trend-generator Cloud Run secara otomatis setiap 2 menit. [cite: 10]
 * [cite_start]**Cloud Run (trend-generator)**: Menghasilkan data tren dummy yang kaya (dari platform seperti Facebook, TikTok, Twitter, Instagram) dan memasukkan data ini ke tabel daily_trends dan social_media_posts di BigQuery. [cite: 11]
@@ -16,6 +18,8 @@ Penjelasan Alur:
 * **Vertex AI Agent Builder**: Agen AI (SocialMediaTrendAnalyzer) yang dibangun di platform ini akan berinteraksi langsung dengan pengguna. [cite_start]Ketika pengguna mengajukan pertanyaan tentang tren, agen ini akan memanfaatkan Data Store Vertex AI Search untuk menemukan dan mengambil informasi relevan dari BigQuery, lalu menggunakan model bahasa besar (LLM) untuk menyusun jawaban yang informatif. [cite: 15, 16]
 
 ### 2.2. Data Flow Diagram
+<img width="670" height="656" alt="Screenshot 2025-07-30 4 11 15 PM" src="https://github.com/user-attachments/assets/3c9fcd6a-a5bc-411f-bc30-518a6452e668" />
+
 Diagram ini menunjukkan bagaimana Google Cloud Platform dapat mengotomatisasi analisis tren media sosial menggunakan agen AI percakapan. Setiap dua menit, Cloud Scheduler memicu Cloud Function untuk mengambil data terbaru dari berbagai API media sosial seperti Facebook, Instagram, TikTok, dan Twitter. Data yang dikumpulkan disimpan ke BigQuery sebagai pusat penyimpanan, lalu disinkronkan ke Vertex AI Search (Data Store). [cite_start]Agen AI bernama SocialMediaTrendAnalyzer yang dibangun di Vertex AI Agent Builder kemudian menggunakan data ini untuk menjawab pertanyaan pengguna secara cerdas dan real-time melalui Agentspace, menciptakan pengalaman analitik yang interaktif dan responsif. [cite: 18, 19, 20, 21]
 
 ## 3. GCP Service
