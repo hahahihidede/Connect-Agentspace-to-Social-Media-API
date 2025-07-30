@@ -8,7 +8,7 @@
 
 ### 2.1. GCP Service Architecture
 
-Here's an explanation of the workflow and the role of each GCP service in this architecture:
+[cite_start]Here's an explanation of the workflow and the role of each GCP service in this architecture[cite: 9]:
 
 * [cite_start]**Cloud Scheduler**: Automatically triggers the `trend-generator` Cloud Run service every 2 minutes[cite: 10].
 * [cite_start]**Cloud Run (`trend-generator`)**: Generates rich dummy trend data (from platforms like Facebook, TikTok, Twitter, Instagram) and ingests this data into the `daily_trends` and `social_media_posts` tables in BigQuery[cite: 11].
@@ -24,7 +24,7 @@ Here's an explanation of the workflow and the role of each GCP service in this a
 
 ## 🛠️ GCP Services Used
 
-Here are more details about the GCP services utilized in this project:
+[cite_start]Here are more details about the GCP services utilized in this project[cite: 22]:
 
 ### 3.1. BigQuery
 * [cite_start]**Role**: A fully managed data warehouse for scalable and cost-effective storage of social media trend data[cite: 24]. [cite_start]It acts as the "single source of truth" for data analyzed by the agent[cite: 25].
