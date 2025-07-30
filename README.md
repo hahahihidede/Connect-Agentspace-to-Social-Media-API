@@ -7,20 +7,18 @@ This project demonstrates the construction of an "Agentspace" — an intelligent
 ## 🚀 Architecture
 
 ### 2.1. GCP Service Architecture
-![MNC Demo Agentspace (1)](https://github.com/user-attachments/assets/c17155ce-6df3-4def-84d2-9e035d05a10a)
 
 Here's an explanation of the workflow and the role of each GCP service in this architecture:
 
-* [cite_start]**Cloud Scheduler**: Automatically triggers the `trend-generator` Cloud Run service every 2 minutes. [cite: 10]
-* [cite_start]**Cloud Run (`trend-generator`)**: Generates rich dummy trend data (from platforms like Facebook, TikTok, Twitter, Instagram) and ingests this data into the `daily_trends` and `social_media_posts` tables in BigQuery. [cite: 11]
-* [cite_start]**BigQuery**: Serves as a centralized, structured data repository for all ingested trend data. [cite: 12]
-* [cite_start]**Vertex AI Search (Data Store)**: Data from BigQuery is synchronized to a Data Store in Vertex AI Search. [cite: 13] [cite_start]This enables the AI agent to perform *Retrieval Augmented Generation* (RAG) from your structured data. [cite: 14]
-* [cite_start]**Vertex AI Agent Builder**: The AI agent (`SocialMediaTrendAnalyzer`) built on this platform directly interacts with users. [cite: 15] [cite_start]When users ask trend-related questions, this agent leverages the Vertex AI Search Data Store to find and retrieve relevant information from BigQuery, then uses a Large Language Model (LLM) to compose informative answers. [cite: 16]
+* **Cloud Scheduler**: Automatically triggers the `trend-generator` Cloud Run service every 2 minutes.
+* **Cloud Run (`trend-generator`)**: Generates rich dummy trend data (from platforms like Facebook, TikTok, Twitter, Instagram) and ingests this data into the `daily_trends` and `social_media_posts` tables in BigQuery.
+* **BigQuery**: Serves as a centralized, structured data repository for all ingested trend data.
+* **Vertex AI Search (Data Store)**: Data from BigQuery is synchronized to a Data Store in Vertex AI Search. This enables the AI agent to perform *Retrieval Augmented Generation* (RAG) from your structured data.
+* **Vertex AI Agent Builder**: The AI agent (`SocialMediaTrendAnalyzer`) built on this platform directly interacts with users. When users ask trend-related questions, this agent leverages the Vertex AI Search Data Store to find and retrieve relevant information from BigQuery, then uses a Large Language Model (LLM) to compose informative answers.
 
 ### 2.2. Data Flow Diagram
-<img width="670" height="656" alt="Screenshot 2025-07-30 4 11 15 PM" src="https://github.com/user-attachments/assets/12a63180-3323-467b-be39-a08e83ecf005" />
 
-This diagram illustrates how Google Cloud Platform can automate social media trend analysis using a conversational AI agent. Every two minutes, Cloud Scheduler triggers a Cloud Function to fetch the latest data from various social media APIs like Facebook, Instagram, TikTok, and Twitter. The collected data is stored in BigQuery as a central repository, then synchronized to Vertex AI Search (Data Store). [cite_start]The AI agent named `SocialMediaTrendAnalyzer`, built in Vertex AI Agent Builder, then uses this data to answer user questions intelligently and in real-time through Agentspace, creating an interactive and responsive analytical experience. [cite: 18, 19, 20, 21]
+This diagram illustrates how Google Cloud Platform can automate social media trend analysis using a conversational AI agent. Every two minutes, Cloud Scheduler triggers a Cloud Function to fetch the latest data from various social media APIs like Facebook, Instagram, TikTok, and Twitter. The collected data is stored in BigQuery as a central repository, then synchronized to Vertex AI Search (Data Store). The AI agent named `SocialMediaTrendAnalyzer`, built in Vertex AI Agent Builder, then uses this data to answer user questions intelligently and in real-time through Agentspace, creating an interactive and responsive analytical experience.
 
 ---
 
@@ -29,33 +27,33 @@ This diagram illustrates how Google Cloud Platform can automate social media tre
 Here are more details about the GCP services utilized in this project:
 
 ### 3.1. BigQuery
-* [cite_start]**Role**: A fully managed data warehouse for scalable and cost-effective storage of social media trend data. [cite: 24] [cite_start]It acts as the "single source of truth" for data analyzed by the agent. [cite: 25]
-* [cite_start]**Details**: The `social_media_trends` dataset contains two main tables: `daily_trends` (trend summaries) and `social_media_posts` (individual post details). [cite: 26]
+* **Role**: A fully managed data warehouse for scalable and cost-effective storage of social media trend data. It acts as the "single source of truth" for data analyzed by the agent.
+* **Details**: The `social_media_trends` dataset contains two main tables: `daily_trends` (trend summaries) and `social_media_posts` (individual post details).
 
 ### 3.2. Cloud Run
-* **Role**: An event-driven, serverless compute service. [cite_start]Used as the trend data generator. [cite: 28] [cite_start]It scales from zero (no cost when idle) to meet demand. [cite: 29]
-* [cite_start]**Service Name**: `trend-generator` [cite: 30]
-* [cite_start]**Language**: Python 3.11 [cite: 31]
-* [cite_start]**Base Image**: `python:3.11-slim-buster` [cite: 32]
+* **Role**: An event-driven, serverless compute service. Used as the trend data generator. It scales from zero (no cost when idle) to meet demand.
+* **Service Name**: `trend-generator`
+* **Language**: Python 3.11
+* **Base Image**: `python:3.11-slim-buster`
 
 ### 3.3. Cloud Scheduler
-* [cite_start]**Role**: A managed cron job scheduler that periodically triggers the Cloud Run service (every 2 minutes). [cite: 34]
-* [cite_start]**Job Name**: `trigger-trend-generator` [cite: 35]
+* **Role**: A managed cron job scheduler that periodically triggers the Cloud Run service (every 2 minutes).
+* **Job Name**: `trigger-trend-generator`
 
 ### 3.4. Vertex AI Search (Discovery Engine - Data Store)
-* [cite_start]**Role**: Allows you to create a powerful search engine from your data. [cite: 37] [cite_start]It is used to index BigQuery data and make it available for information retrieval by the AI agent. [cite: 38]
-* [cite_start]**Type**: Structured Data Store directly connected to BigQuery tables. [cite: 39]
+* **Role**: Allows you to create a powerful search engine from your data. It is used to index BigQuery data and make it available for information retrieval by the AI agent.
+* **Type**: Structured Data Store directly connected to BigQuery tables.
 
 ### 3.5. Vertex AI Agent Builder
-* [cite_start]**Role**: A development platform for building AI conversational agents powered by Large Language Models (LLM). [cite: 41] [cite_start]It orchestrates user interactions, tool calls, and LLM responses. [cite: 42]
-* [cite_start]**Agent Name**: `SocialMediaTrendAnalyzer` [cite: 43]
-* [cite_start]**Region**: `us-central1` (Primary region for GenAI services) [cite: 44]
-* [cite_start]**Model**: Gemini (or Gemini Pro) [cite: 45]
+* **Role**: A development platform for building AI conversational agents powered by Large Language Models (LLM). It orchestrates user interactions, tool calls, and LLM responses.
+* **Agent Name**: `SocialMediaTrendAnalyzer`
+* **Region**: `us-central1` (Primary region for GenAI services)
+* **Model**: Gemini (or Gemini Pro)
 
 ### 3.6. Cloud Function (`query-bigquery-trends`) - (Optional/Alternative Tool Connection)
-* [cite_start]**Role**: A serverless function that can act as an API gateway for querying BigQuery if you choose a "Custom Tool" approach in Agent Builder, rather than a Data Store. [cite: 47] [cite_start]This function is deployed as a private function requiring OIDC authentication. [cite: 48]
-* [cite_start]**Function Name**: `query-bigquery-trends` [cite: 49]
-* [cite_start]**URL (Example)**: `https://asia-southeast2-YOUR_GCP_PROJECT_ID.cloudfunctions.net/query-bigquery-trends` (This URL is needed if you choose to use Cloud Function as a Custom Tool). [cite: 50]
+* **Role**: A serverless function that can act as an API gateway for querying BigQuery if you choose a "Custom Tool" approach in Agent Builder, rather than a Data Store. This function is deployed as a private function requiring OIDC authentication.
+* **Function Name**: `query-bigquery-trends`
+* **URL (Example)**: `https://asia-southeast2-YOUR_GCP_PROJECT_ID.cloudfunctions.net/query-bigquery-trends` (This URL is needed if you choose to use Cloud Function as a Custom Tool).
 
 ---
 
@@ -67,7 +65,7 @@ Here are more details about the GCP services utilized in this project:
 
 * **Understand Platform Policies**: Each platform (Meta/Facebook/Instagram, TikTok, X/Twitter) has distinct API policies, terms of service, and data usage limitations. It's crucial to thoroughly understand these.
 * **Register as a Developer & Create an App**: Visit the developer portal for each platform (e.g., Meta for Developers, TikTok for Developers, X Developer Platform). Create a developer account and register a new application (e.g., "Social Media Trend Analyzer App") for your project. This app will be your identity when calling APIs.
-* **Request API Access & Undergo Review**: Many social media APIs, especially for large-scale or user-related data, require strict approval and review processes, often involving detailed explanations of your use case. Obtain credentials suchs as API Key, API Secret, Client ID, and Client Secret.
+* **Request API Access & Undergo Review**: Many social media APIs, especially for large-scale or user-related data, require strict approval and review processes, often involving detailed explanations of your use case. Obtain credentials such as API Key, API Secret, Client ID, and Client Secret.
 * **Understand Authentication & Tokens**: Learn each API's authentication mechanism (commonly OAuth 2.0) to acquire the necessary Access Token for calling API endpoints.
 * **Observe Rate Limits**: Each API has limits on the number of requests allowed within a specific period (e.g., per second, per minute, per hour). Your data ingestion pipeline must be designed to adhere to these limits.
 * **Use Official SDK/Library**: Utilize official SDKs or libraries provided by the platforms (if available) to simplify API interaction.
@@ -88,7 +86,7 @@ Here are more details about the GCP services utilized in this project:
 1.  **Enable BigQuery API**: Navigate to `APIs & Services > Enabled APIs & Services`.
 2.  **Create BigQuery Dataset**:
     * In the BigQuery Console, create a dataset with ID: `social_media_trends`.
-    * Data location: `asia-southeast2` (Kuala Lumpur, current time is Wednesday, July 30, 2025 at 5:16:28 PM +08).
+    * Data location: `asia-southeast2` (Kuala Lumpur, current time is Wednesday, July 30, 2025 at 5:18:03 PM +08).
 3.  **Create BigQuery Table `daily_trends`**:
     * Table name: `daily_trends`.
     * Schema (text mode):
