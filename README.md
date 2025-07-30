@@ -7,6 +7,7 @@ This project demonstrates the construction of an "Agentspace" — an intelligent
 ## 🚀 Architecture
 
 ### 2.1. GCP Service Architecture
+![MNC Demo Agentspace (1)](https://github.com/user-attachments/assets/c34ca919-861e-4aef-b145-50a7194630f9)
 
 Here's an explanation of the workflow and the role of each GCP service in this architecture:
 
@@ -17,6 +18,7 @@ Here's an explanation of the workflow and the role of each GCP service in this a
 * **Vertex AI Agent Builder**: The AI agent (`SocialMediaTrendAnalyzer`) built on this platform directly interacts with users. When users ask trend-related questions, this agent leverages the Vertex AI Search Data Store to find and retrieve relevant information from BigQuery, then uses a Large Language Model (LLM) to compose informative answers.
 
 ### 2.2. Data Flow Diagram
+<img width="670" height="656" alt="Screenshot 2025-07-30 4 11 15 PM" src="https://github.com/user-attachments/assets/35a75cac-e1d1-4d5c-8cd0-9c65de206cc2" />
 
 This diagram illustrates how Google Cloud Platform can automate social media trend analysis using a conversational AI agent. Every two minutes, Cloud Scheduler triggers a Cloud Function to fetch the latest data from various social media APIs like Facebook, Instagram, TikTok, and Twitter. The collected data is stored in BigQuery as a central repository, then synchronized to Vertex AI Search (Data Store). The AI agent named `SocialMediaTrendAnalyzer`, built in Vertex AI Agent Builder, then uses this data to answer user questions intelligently and in real-time through Agentspace, creating an interactive and responsive analytical experience.
 
